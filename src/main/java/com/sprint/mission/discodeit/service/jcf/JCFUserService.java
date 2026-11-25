@@ -17,8 +17,10 @@ public class JCFUserService implements UserService {
 
 
     @Override
-    public boolean create(String name) {
-        return data.add(new User(name));
+    public User create(String name) {
+        User user = new User(name);
+        data.add(user);
+        return user;
     }
 
     @Override

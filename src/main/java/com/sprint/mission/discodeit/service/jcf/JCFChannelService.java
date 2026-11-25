@@ -17,8 +17,10 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public boolean create(String name) {
-        return data.add(new Channel(name));
+    public Channel create(String name) {
+        Channel channel = new Channel(name);
+        data.add(new Channel(name));
+        return channel;
     }
 
     @Override

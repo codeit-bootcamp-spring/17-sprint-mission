@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ChannelService {
-    boolean create(String name);
+    Channel create(String name);
     Channel read(UUID id);
     List<Channel> readAll();
     void update(UUID id, String name);

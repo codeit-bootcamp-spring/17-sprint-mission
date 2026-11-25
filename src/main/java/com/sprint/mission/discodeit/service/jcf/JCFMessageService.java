@@ -32,9 +32,11 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public boolean create(UUID userId, UUID channelId, String text) {
+    public Message create(UUID userId, UUID channelId, String text) {
         validateId(userId, channelId);
-        return data.add(new Message(userId, channelId, text));
+        Message message = new Message(userId, channelId, text);
+        data.add(message);
+        return message;
     }
 
     @Override
