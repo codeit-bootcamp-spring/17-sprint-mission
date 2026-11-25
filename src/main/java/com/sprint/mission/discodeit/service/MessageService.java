@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageService {
-    boolean create(String name);
+    boolean create(UUID userId, UUID channelId, String text);
     Message read(UUID id);
     List<Message> readAll();
-    void update(UUID id, String name);
+    void update(UUID id, String text);
     void delete(UUID id);
-    List<Message> findByText(String name);
+    List<Message> findByText(String text);
 }

@@ -15,18 +15,23 @@ public class JavaApplication {
     public static void main(String[] args) {
         UserService userService = new JCFUserService();
         ChannelService channelService = new JCFChannelService();
-        MessageService messageService = new JCFMessageService();
+        MessageService messageService = new JCFMessageService(channelService,userService);
+
 
         System.out.println("===== 등록 =====");
         userService.create("김코딩");
         userService.create("이코딩");
         userService.create("최코딩");
+        UUID userId = userService.findByName("김코딩").get(0).getId();
+
         channelService.create("채널1");
         channelService.create("채널2");
         channelService.create("채널3");
-        messageService.create("메세지1");
-        messageService.create("메세지2");
-        messageService.create("메세지3");
+        UUID channelId = channelService.findByName("채널1").get(0).getId();
+
+        messageService.create(userId, channelId, "메세지1");
+        messageService.create(userId, channelId, "메세지2");
+        messageService.create(userId, channelId, "메세지3");
 
 
         System.out.println("\n===== 조회(단건, 다건) =====");
@@ -39,19 +44,18 @@ public class JavaApplication {
 
 
         System.out.println("\n1명 조회:");
-        UUID id = userService.findByName("김코딩").get(0).getId();
-        System.out.println(String.format("김코딩 ID: %s", id));
+        System.out.println(String.format("김코딩 ID: %s", userId));
 
 
         System.out.println("\n===== 수정 =====");
-        userService.update(id, "박수정");
+        userService.update(userId, "박수정");
 
         System.out.println("\n===== 수정된 데이터 조회 =====");
         userService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getName(), x.getId())));
 
 
         System.out.println("\n===== 삭제 =====");
-        userService.delete(id);
+        userService.delete(userId);
 
 
         System.out.println("\n===== 삭제 조회 =====");
