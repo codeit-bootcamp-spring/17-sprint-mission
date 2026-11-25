@@ -22,7 +22,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> findAllById(UUID... ids) {
+    public List<Message> findAllById(List<UUID> ids) {
         return List.of();
     }
 

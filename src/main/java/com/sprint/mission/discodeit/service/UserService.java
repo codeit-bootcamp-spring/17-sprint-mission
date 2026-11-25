@@ -12,7 +12,7 @@ public interface UserService {
     /// Read
     User findById(UUID id);
 
-    List<User> findAllById(UUID... ids);
+    List<User> findAllById(List<UUID> ids);
 
     List<User> findAll();
 

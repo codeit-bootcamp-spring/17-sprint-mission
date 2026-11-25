@@ -12,7 +12,7 @@ public interface MessageService {
     /// Read
     Message findById(UUID id);
 
-    List<Message> findAllById(UUID... ids);
+    List<Message> findAllById(List<UUID> ids);
 
     List<Message> findAll();
 

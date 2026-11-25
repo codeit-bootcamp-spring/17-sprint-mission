@@ -22,7 +22,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<User> findAllById(UUID... ids) {
+    public List<User> findAllById(List<UUID> ids) {
         return List.of();
     }
 

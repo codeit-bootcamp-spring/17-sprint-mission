@@ -12,12 +12,12 @@ public interface ChannelService {
     /// Read
     Channel findById(UUID id);
 
-    List<Channel> findAllById(UUID... ids);
+    List<Channel> findAllById(List<UUID> ids);
 
     List<Channel> findAll();
 
     /// Update
-    Channel update(UUID id, String channelName, UUID serverId);
+    Channel update(UUID id, String name, UUID serverId);
 
     /// Delete
     void delete(UUID id);
