@@ -1,49 +1,60 @@
 package com.sprint.mission;
 
 import com.sprint.mission.discodeit.entity.*;
+import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
+import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
+import com.sprint.mission.discodeit.service.jcf.JCFUserService;
+
+import java.util.UUID;
 
 public class JavaApplication {
 
     public static void main(String[] args) {
-        User user = new User("테스트 유저");
-        Channel channel = new Channel("테스트 채널");
-        Message message = new Message("테스트 메시지");
+        UserService userService = new JCFUserService();
+        ChannelService channelService = new JCFChannelService();
+        MessageService messageService = new JCFMessageService();
 
-        // User 테스트
-        System.out.println("===== User =====");
-        printEntity(user);
-        System.out.println("Username: " + user.getName());
+        System.out.println("===== 등록 =====");
+        userService.create("김코딩");
+        userService.create("이코딩");
+        userService.create("최코딩");
+        channelService.create("채널1");
+        channelService.create("채널2");
+        channelService.create("채널3");
+        messageService.create("메세지1");
+        messageService.create("메세지2");
+        messageService.create("메세지3");
 
-        // Channel 테스트
-        System.out.println("\n===== Channel =====");
-        printEntity(channel);
-        System.out.println("Name: " + channel.getName());
 
-        // Message 테스트
-        System.out.println("\n===== Message =====");
-        printEntity(message);
-        System.out.println("Content: " + message.getText());
+        System.out.println("\n===== 조회(단건, 다건) =====");
+        System.out.println("유저 조회:");
+        userService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getName(), x.getId())));
+        System.out.println("\n채널 조회:");
+        channelService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getName(), x.getId())));
+        System.out.println("\n메세지 조회:");
+        messageService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getText(), x.getId())));
 
-        // 수정 테스트
-        System.out.println("\n===== Update =====");
 
-        user.updateName("수정된 유저");
-        channel.updateName("수정된 채널");
-        message.updateText("수정된 메시지");
+        System.out.println("\n1명 조회:");
+        UUID id = userService.findByName("김코딩").get(0).getId();
+        System.out.println(String.format("김코딩 ID: %s", id));
 
-        System.out.println("Username: " + user.getName());
-        System.out.println("UpdatedAt: " + user.getUpdatedAt());
 
-        System.out.println("Name: " + channel.getName());
-        System.out.println("UpdatedAt: " + channel.getUpdatedAt());
+        System.out.println("\n===== 수정 =====");
+        userService.update(id, "박수정");
 
-        System.out.println("Content: " + message.getText());
-        System.out.println("UpdatedAt: " + message.getUpdatedAt());
-    }
+        System.out.println("\n===== 수정된 데이터 조회 =====");
+        userService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getName(), x.getId())));
 
-    private static void printEntity(Entity entity) {
-        System.out.println("ID: " + entity.getId());
-        System.out.println("CreatedAt: " + entity.getCreatedAt());
-        System.out.println("UpdatedAt: " + entity.getUpdatedAt());
+
+        System.out.println("\n===== 삭제 =====");
+        userService.delete(id);
+
+
+        System.out.println("\n===== 삭제 조회 =====");
+        userService.readAll().forEach(x -> System.out.println(String.format("%s(%s)", x.getName(), x.getId())));
     }
 }
