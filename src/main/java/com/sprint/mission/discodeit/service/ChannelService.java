@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface ChannelService {
     /// Create
-    Channel create(String channelName, UUID serverId);
+    Channel create(String Name, UUID serverId);
 
     /// Read
     Channel findById(UUID id);
