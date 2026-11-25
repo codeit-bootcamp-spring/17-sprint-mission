@@ -13,8 +13,8 @@ public class JCFChannelService implements ChannelService {
     /// / ChannelService Interface Override (CRUD)
 
     @Override
-    public Channel create(String Name, UUID serverId) {
-        Channel newChannel = new Channel(Name, serverId);
+    public Channel create(String name, UUID serverId) {
+        Channel newChannel = new Channel(name, serverId);
         data.put(newChannel.getId(), newChannel);
         return newChannel;
     }

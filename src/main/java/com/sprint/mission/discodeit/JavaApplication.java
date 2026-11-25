@@ -17,6 +17,6 @@ public class JavaApplication {
         TestRunner testRunner = new TestRunner();
         testRunner.run(channelService);
         testRunner.run(messageService);
-//        testRunner.run(userService);
+        testRunner.run(userService);
     }
 }
