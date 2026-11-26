@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.file;
 
+import com.sprint.mission.ChannelType;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.util.IOUtils;
@@ -18,8 +19,8 @@ public class FileChannelService  implements ChannelService{
     }
 
     @Override
-    public Channel create(String name) {
-        Channel channel = new Channel(name);
+    public Channel create(ChannelType type, String name, String description) {
+        Channel channel = new Channel(type, name, description);
         IOUtils.save(IOUtils.getFilePath(directory, channel.getId()), channel);
         return channel;
     }
@@ -52,9 +53,9 @@ public class FileChannelService  implements ChannelService{
     }
 
     @Override
-    public List<Channel> findByName(String name) {
+    public List<Channel> findByText(String text) {
         return readAll().stream()
-                .filter(x -> x.getName().equals(name))
+                .filter(x -> x.getName().equals(text))
                 .toList();
     }
 }

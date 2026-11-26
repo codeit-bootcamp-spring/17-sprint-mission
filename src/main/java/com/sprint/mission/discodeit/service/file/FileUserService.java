@@ -18,8 +18,8 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User create(String name) {
-        User user = new User(name);
+    public User create(String name, String email, String nickname) {
+        User user = new User(name, email, nickname);
         IOUtils.save(IOUtils.getFilePath(directory, user.getId()), user);
         return user;
     }

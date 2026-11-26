@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import com.sprint.mission.ChannelType;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
@@ -16,10 +17,11 @@ public class JCFChannelService implements ChannelService {
         data = new ArrayList<>();
     }
 
+
     @Override
-    public Channel create(String name) {
-        Channel channel = new Channel(name);
-        data.add(new Channel(name));
+    public Channel create(ChannelType type, String name, String description) {
+        Channel channel = new Channel(type, name, description);
+        data.add(channel);
         return channel;
     }
 
@@ -49,9 +51,9 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public List<Channel> findByName(String name) {
+    public List<Channel> findByText(String text) {
         return data.stream()
-                .filter(x -> x.getName().equals(name))
+                .filter(x -> x.getName().equals(text))
                 .collect(Collectors.toList());
     }
 }

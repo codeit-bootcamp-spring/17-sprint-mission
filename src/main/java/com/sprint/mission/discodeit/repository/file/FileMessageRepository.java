@@ -14,7 +14,7 @@ public class FileMessageRepository implements MessageRepository {
     private final Path directory;
 
     public FileMessageRepository() {
-        directory = Paths.get(System.getProperty("user.dir","data"),"messages");
+        directory = Paths.get(System.getProperty("user.dir"),"data","messages");
         IOUtils.init(directory);
     }
 
