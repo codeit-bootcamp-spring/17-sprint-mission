@@ -58,6 +58,19 @@ public class IOUtils {
         }
     }
 
+    public static <T> T loadOne(Path filePath, Class<T> type){
+        if(!Files.exists(filePath)){
+            return null;
+        }
+        try (FileInputStream fis = new FileInputStream(filePath.toFile());
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return type.cast(ois.readObject());
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException();
+        }
+    }
+
     public static void delete(Path filePath){
         try{
             Files.deleteIfExists(filePath);
