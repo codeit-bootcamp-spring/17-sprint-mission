@@ -4,32 +4,50 @@ import com.sprint.mission.discodeit.config.SerializedFileStore;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class FileUserRepository implements UserRepository {
     @Override
     public User save(User entity) {
-        return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, entity.getId(), POST_FIX);
+        return SerializedFileStore.serialize(entity, getPath(entity.getId()));
     }
 
     @Override
     public User findById(UUID id) {
-        return SerializedFileStore.deserializeFromFile(User.class, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
+        return SerializedFileStore.deserialize(User.class, getPath(id));
     }
 
     @Override
     public List<User> findAllById(List<UUID> ids) {
-        return SerializedFileStore.deserializeFromFile(User.class, DIRECTORY_NAME, PRE_FIX, ids, POST_FIX);
+        return ids.stream()
+                .distinct()
+                .map(this::getPath)
+                .map(path -> SerializedFileStore.deserialize(User.class, path))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<User> findAll() {
-        return SerializedFileStore.deserializeAllFromDirectory(User.class, DIRECTORY_NAME, PRE_FIX, POST_FIX);
+        return SerializedFileStore.findAllByDirectory(getPath()).stream()
+                .filter(path -> path.getFileName().toString().startsWith(PRE_FIX))
+                .filter(path -> path.getFileName().toString().endsWith(POST_FIX))
+                .map(path -> SerializedFileStore.deserialize(User.class, path))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void delete(UUID id) {
-        SerializedFileStore.deleteFile(DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
+        SerializedFileStore.deleteFile(getPath(id));
+    }
+
+    private Path getPath() {
+        return SerializedFileStore.DATA_HOME.resolve(DIRECTORY_NAME);
+    }
+
+    private Path getPath(UUID id) {
+        return getPath().resolve(PRE_FIX + id + POST_FIX);
     }
 }
