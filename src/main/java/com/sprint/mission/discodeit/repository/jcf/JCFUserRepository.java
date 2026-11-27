@@ -3,32 +3,49 @@ package com.sprint.mission.discodeit.repository.jcf;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class JCFUserRepository implements UserRepository {
+    private final Map<UUID, User> data = new HashMap<>();
+
     @Override
     public User save(User entity) {
-        return null;
+        data.put(entity.getId(), entity);
+        return entity;
     }
 
     @Override
-    public User findById(UUID id) {
-        return null;
+    public User findById(UUID id)  {
+        return getCheckedData(id);
     }
 
     @Override
     public List<User> findAllById(List<UUID> ids) {
-        return List.of();
+        return ids.stream()
+                .map(this::getCheckedData)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> findAll() {
-        return List.of();
+    public List<User> findAll()  {
+        return data.values().stream().toList();
     }
 
     @Override
     public void delete(UUID id) {
+        getCheckedData(id);
+        data.remove(id);
+    }
 
+    private User getCheckedData(UUID id) {
+        if (!data.containsKey(id)) {
+            throw new IllegalArgumentException("유효하지 않은 User Id. (" + id + ")");
+        }
+        return data.get(id);
     }
 }
