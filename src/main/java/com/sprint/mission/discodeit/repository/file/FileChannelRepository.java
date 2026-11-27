@@ -10,6 +10,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileChannelRepository implements ChannelRepository {
+    private static FileChannelRepository instance;
+
+    private FileChannelRepository() {
+    }
+
+    public static FileChannelRepository getInstance() {
+        return (instance == null) ? instance = new FileChannelRepository() : instance;
+    }
+
     @Override
     public Channel save(Channel entity) {
         return SerializedFileStore.serialize(entity, getPath(entity.getId()));

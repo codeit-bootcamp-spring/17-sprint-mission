@@ -13,6 +13,14 @@ public class FileChannelService implements ChannelService {
     private static final String DIRECTORY_NAME = "channels";
     private static final String PRE_FIX = "channel_";
     private static final String POST_FIX = ".ser";
+    private static FileChannelService instance;
+
+    private FileChannelService() {
+    }
+
+    public static FileChannelService getInstance() {
+        return (instance == null) ? instance = new FileChannelService() : instance;
+    }
 
     /// / ChannelService Interface Override (CRUD)
 

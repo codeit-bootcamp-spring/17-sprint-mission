@@ -10,6 +10,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileUserRepository implements UserRepository {
+    private static FileUserRepository instance;
+
+    private FileUserRepository() {
+    }
+
+    public static FileUserRepository getInstance() {
+        return (instance == null) ? instance = new FileUserRepository() : instance;
+    }
+
     @Override
     public User save(User entity) {
         return SerializedFileStore.serialize(entity, getPath(entity.getId()));

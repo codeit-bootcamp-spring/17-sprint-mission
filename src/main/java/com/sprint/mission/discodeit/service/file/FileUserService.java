@@ -13,6 +13,14 @@ public class FileUserService implements UserService {
     private static final String DIRECTORY_NAME = "users";
     private static final String PRE_FIX = "user_";
     private static final String POST_FIX = ".ser";
+    private static FileUserService instance;
+
+    private FileUserService() {
+    }
+
+    public static FileUserService getInstance() {
+        return (instance == null) ? instance = new FileUserService() : instance;
+    }
 
     /// / UserService Interface Override (CRUD)
 

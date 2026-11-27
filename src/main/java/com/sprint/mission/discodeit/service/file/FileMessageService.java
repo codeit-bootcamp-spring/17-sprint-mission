@@ -13,6 +13,14 @@ public class FileMessageService implements MessageService {
     private static final String DIRECTORY_NAME = "messages";
     private static final String PRE_FIX = "message_";
     private static final String POST_FIX = ".ser";
+    private static FileMessageService instance;
+
+    private FileMessageService() {
+    }
+
+    public static FileMessageService getInstance() {
+        return (instance == null) ? instance = new FileMessageService() : instance;
+    }
 
     /// / MessageService Interface Override (CRUD)
 

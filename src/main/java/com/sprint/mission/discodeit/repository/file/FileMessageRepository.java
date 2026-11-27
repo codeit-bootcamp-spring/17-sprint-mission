@@ -10,6 +10,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileMessageRepository implements MessageRepository {
+    private static FileMessageRepository instance;
+
+    private FileMessageRepository() {
+    }
+
+    public static FileMessageRepository getInstance() {
+        return (instance == null) ? instance = new FileMessageRepository() : instance;
+    }
+
     @Override
     public Message save(Message entity) {
         return SerializedFileStore.serialize(entity, getPath(entity.getId()));

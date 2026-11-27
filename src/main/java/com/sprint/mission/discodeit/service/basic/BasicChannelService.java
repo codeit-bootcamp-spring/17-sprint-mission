@@ -2,46 +2,54 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.util.List;
 import java.util.UUID;
 
 public class BasicChannelService implements ChannelService {
-    private final ChannelRepository repository;
+    private final ChannelRepository channelRepository;
 
-    public BasicChannelService(ChannelRepository repository) {
-        this.repository = repository;
+    private static BasicChannelService instance;
+
+    private BasicChannelService() {
+        channelRepository = FileChannelRepository.getInstance();
+//        repository = JCFChannelRepository.getInstance();
+    }
+
+    public static BasicChannelService getInstance() {
+        return (instance == null) ? instance = new BasicChannelService() : instance;
     }
 
     @Override
     public Channel create(String name, UUID serverId) {
-        return repository.save( new Channel(name, serverId));
+        return channelRepository.save(new Channel(name, serverId));
     }
 
     @Override
     public Channel findById(UUID id) {
-        return repository.findById(id);
+        return channelRepository.findById(id);
     }
 
     @Override
     public List<Channel> findAllById(List<UUID> ids) {
-        return repository.findAllById(ids);
+        return channelRepository.findAllById(ids);
     }
 
     @Override
     public List<Channel> findAll() {
-        return repository.findAll();
+        return channelRepository.findAll();
     }
 
     @Override
     public Channel update(UUID id, String name, UUID serverId) {
-        Channel entity = repository.findById(id).update(name,serverId);
-        return repository.save(entity);
+        Channel entity = channelRepository.findById(id).update(name, serverId);
+        return channelRepository.save(entity);
     }
 
     @Override
     public void delete(UUID id) {
-        repository.delete(id);
+        channelRepository.delete(id);
     }
 }
