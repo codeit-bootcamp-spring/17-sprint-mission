@@ -3,10 +3,7 @@ package com.sprint.mission.discodeit.repository.jcf;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JCFMessageRepository implements MessageRepository {
@@ -28,13 +25,24 @@ public class JCFMessageRepository implements MessageRepository {
 
     @Override
     public Message findById(UUID id) {
-        return getCheckedData(id);
+        try {
+            return getCheckedData(id);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
     public List<Message> findAllById(List<UUID> ids) {
         return ids.stream()
-                .map(this::getCheckedData)
+                .map(i -> {
+                    try {
+                        return getCheckedData(i);
+                    } catch (NullPointerException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -51,9 +59,10 @@ public class JCFMessageRepository implements MessageRepository {
     }
 
     private Message getCheckedData(UUID id) {
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("유효하지 않은 Message Id. (" + id + ")");
+        try {
+            return data.get(id);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("유효하지 않은 id");
         }
-        return data.get(id);
     }
 }

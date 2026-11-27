@@ -3,10 +3,7 @@ package com.sprint.mission.discodeit.repository.jcf;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JCFUserRepository implements UserRepository {
@@ -27,20 +24,31 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(UUID id)  {
-        return getCheckedData(id);
+    public User findById(UUID id) {
+        try {
+            return getCheckedData(id);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
     public List<User> findAllById(List<UUID> ids) {
         return ids.stream()
-                .map(this::getCheckedData)
+                .map(i -> {
+                    try {
+                        return getCheckedData(i);
+                    } catch (NullPointerException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> findAll()  {
+    public List<User> findAll() {
         return data.values().stream().toList();
     }
 
@@ -51,9 +59,10 @@ public class JCFUserRepository implements UserRepository {
     }
 
     private User getCheckedData(UUID id) {
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("유효하지 않은 User Id. (" + id + ")");
+        try {
+            return data.get(id);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("유효하지 않은 id");
         }
-        return data.get(id);
     }
 }

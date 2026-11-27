@@ -22,7 +22,7 @@ public final class SerializedFileStore {
 
         try {
             try (FileOutputStream fos = new FileOutputStream(temp.toFile());
-                 ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                 oos.writeObject(object);
             }
             Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING);
@@ -37,7 +37,10 @@ public final class SerializedFileStore {
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             return objectType.cast(ois.readObject());
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (NoSuchFileException | FileNotFoundException e) {
+            return null;
+        }
+        catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("역직렬화 실패: " + path, e);
         }
     }

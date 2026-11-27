@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class FileChannelRepository implements ChannelRepository {
                 .distinct()
                 .map(this::getPath)
                 .map(path -> SerializedFileStore.deserialize(Channel.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -44,6 +46,7 @@ public class FileChannelRepository implements ChannelRepository {
                 .filter(path -> path.getFileName().toString().startsWith(PRE_FIX))
                 .filter(path -> path.getFileName().toString().endsWith(POST_FIX))
                 .map(path -> SerializedFileStore.deserialize(Channel.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

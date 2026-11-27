@@ -2,10 +2,14 @@ package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.config.SerializedFileStore;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -14,8 +18,12 @@ public class FileMessageService implements MessageService {
     private static final String PRE_FIX = "message_";
     private static final String POST_FIX = ".ser";
     private static FileMessageService instance;
+    private final ChannelService channelService;
+    private final UserService userService;
 
     private FileMessageService() {
+        channelService = FileChannelService.getInstance();
+        userService = FileUserService.getInstance();
     }
 
     public static FileMessageService getInstance() {
@@ -26,6 +34,11 @@ public class FileMessageService implements MessageService {
 
     @Override
     public Message create(String content, UUID authorId, UUID channelId) {
+        if (userService.findById(authorId) == null)
+            return null;
+        if (channelService.findById(channelId) == null)
+            return null;
+
         Message entity = new Message(content, authorId, channelId);
         return SerializedFileStore.serialize(entity, getPath(entity.getId()));
     }
@@ -41,6 +54,7 @@ public class FileMessageService implements MessageService {
                 .distinct()
                 .map(this::getPath)
                 .map(path -> SerializedFileStore.deserialize(Message.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -50,6 +64,7 @@ public class FileMessageService implements MessageService {
                 .filter(path -> path.getFileName().toString().startsWith(PRE_FIX))
                 .filter(path -> path.getFileName().toString().endsWith(POST_FIX))
                 .map(path -> SerializedFileStore.deserialize(Message.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

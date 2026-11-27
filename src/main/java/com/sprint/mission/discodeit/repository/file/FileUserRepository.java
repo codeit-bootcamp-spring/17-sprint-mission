@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.repository.UserRepository;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class FileUserRepository implements UserRepository {
                 .distinct()
                 .map(this::getPath)
                 .map(path -> SerializedFileStore.deserialize(User.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -44,6 +46,7 @@ public class FileUserRepository implements UserRepository {
                 .filter(path -> path.getFileName().toString().startsWith(PRE_FIX))
                 .filter(path -> path.getFileName().toString().endsWith(POST_FIX))
                 .map(path -> SerializedFileStore.deserialize(User.class, path))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

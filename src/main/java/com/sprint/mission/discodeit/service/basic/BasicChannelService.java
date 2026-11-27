@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.util.List;
@@ -15,8 +16,11 @@ public class BasicChannelService implements ChannelService {
 
     private BasicChannelService() {
         channelRepository = FileChannelRepository.getInstance();
-//        repository = JCFChannelRepository.getInstance();
     }
+
+//    private BasicChannelService() {
+//        channelRepository = JCFChannelRepository.getInstance();
+//    }
 
     public static BasicChannelService getInstance() {
         return (instance == null) ? instance = new BasicChannelService() : instance;

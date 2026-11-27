@@ -3,10 +3,7 @@ package com.sprint.mission.discodeit.repository.jcf;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JCFChannelRepository implements ChannelRepository {
@@ -28,13 +25,24 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public Channel findById(UUID id) {
-        return getCheckedData(id);
+        try {
+            return getCheckedData(id);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
     public List<Channel> findAllById(List<UUID> ids) {
         return ids.stream()
-                .map(this::getCheckedData)
+                .map(i -> {
+                    try {
+                        return getCheckedData(i);
+                    } catch (NullPointerException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -51,9 +59,10 @@ public class JCFChannelRepository implements ChannelRepository {
     }
 
     private Channel getCheckedData(UUID id) {
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("유효하지 않은 Channel Id. (" + id + ")");
+        try {
+            return data.get(id);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("유효하지 않은 id");
         }
-        return data.get(id);
     }
 }

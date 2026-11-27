@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
@@ -15,8 +16,11 @@ public class BasicUserService implements UserService {
 
     private BasicUserService() {
         userRepository = FileUserRepository.getInstance();
-//        repository = JCFUserRepository.getInstance();
     }
+
+//    private BasicUserService() {
+//        userRepository = JCFUserRepository.getInstance();
+//    }
 
     public static BasicUserService getInstance() {
         return (instance == null) ? instance = new BasicUserService() : instance;
