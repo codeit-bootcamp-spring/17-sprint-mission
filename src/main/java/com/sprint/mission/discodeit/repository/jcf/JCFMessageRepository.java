@@ -11,6 +11,14 @@ import java.util.stream.Collectors;
 
 public class JCFMessageRepository implements MessageRepository {
     private final Map<UUID, Message> data = new HashMap<>();
+    private static JCFMessageRepository instance;
+
+    private JCFMessageRepository() {
+    }
+
+    public static JCFMessageRepository getInstance() {
+        return (instance == null) ? instance = new JCFMessageRepository() : instance;
+    }
 
     @Override
     public Message save(Message entity) {

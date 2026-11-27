@@ -11,6 +11,14 @@ import java.util.stream.Collectors;
 
 public class JCFUserRepository implements UserRepository {
     private final Map<UUID, User> data = new HashMap<>();
+    private static JCFUserRepository instance;
+
+    private JCFUserRepository() {
+    }
+
+    public static JCFUserRepository getInstance() {
+        return (instance == null) ? instance = new JCFUserRepository() : instance;
+    }
 
     @Override
     public User save(User entity) {

@@ -8,9 +8,16 @@ import java.util.stream.Collectors;
 
 public class JCFMessageService implements MessageService {
     private final Map<UUID, Message> data = new HashMap<>();
+    private static JCFMessageService instance;
 
+    private JCFMessageService() {
+    }
 
-    //// MessageService Interface Override (CRUD)
+    public static JCFMessageService getInstance() {
+        return (instance == null) ? instance = new JCFMessageService() : instance;
+    }
+
+    /// MessageService Interface Override (CRUD)
 
     @Override
     public Message create(String content, UUID authorId, UUID channelId) {

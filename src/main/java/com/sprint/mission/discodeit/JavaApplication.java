@@ -31,53 +31,41 @@ public class JavaApplication {
     static void testJCF() {
         System.out.println("\n\n=================================================================================");
         System.out.println("====JCF*Service Test=============================================================");
-        ChannelService channelService = new JCFChannelService();
-        MessageService messageService = new JCFMessageService();
-        UserService userService = new JCFUserService();
 
-        TestRunner testRunner = new TestRunner();
-        testRunner.run(channelService);
-        testRunner.run(messageService);
-        testRunner.run(userService);
+        new TestRunner()
+                .run(JCFChannelService.getInstance())
+                .run(JCFMessageService.getInstance())
+                .run(JCFUserService.getInstance());
     }
 
     static void testFile() {
         System.out.println("\n\n=================================================================================");
         System.out.println("====File*Service Test============================================================");
-        ChannelService channelService = new FileChannelService();
-        MessageService messageService = new FileMessageService();
-        UserService userService = new FileUserService();
 
-        TestRunner testRunner = new TestRunner();
-        testRunner.run(channelService);
-        testRunner.run(messageService);
-        testRunner.run(userService);
+        new TestRunner()
+                .run(new FileChannelService())
+                .run(new FileMessageService())
+                .run(new FileUserService());
     }
 
     static void testBasicJCF() {
         System.out.println("\n\n=================================================================================");
         System.out.println("====Basic*Service / JCF*Repository Test==========================================");
-        ChannelService channelService = new BasicChannelService(new JCFChannelRepository());
-        MessageService messageService = new BasicMessageService(new JCFMessageRepository());
-        UserService userService = new BasicUserService(new JCFUserRepository());
 
-        TestRunner testRunner = new TestRunner();
-        testRunner.run(channelService);
-        testRunner.run(messageService);
-        testRunner.run(userService);
+        new TestRunner()
+                .run(new BasicChannelService(JCFChannelRepository.getInstance()))
+                .run(new BasicMessageService(JCFMessageRepository.getInstance()))
+                .run(new BasicUserService(JCFUserRepository.getInstance()));
     }
 
     static void testBasicFile() {
         System.out.println("\n\n=================================================================================");
         System.out.println("====Basic*Service / File*Repository Test=========================================");
-        ChannelService channelService = new BasicChannelService(new FileChannelRepository());
-        MessageService messageService = new BasicMessageService(new FileMessageRepository());
-        UserService userService = new BasicUserService(new FileUserRepository());
 
-        TestRunner testRunner = new TestRunner();
-        testRunner.run(channelService);
-        testRunner.run(messageService);
-        testRunner.run(userService);
+        new TestRunner()
+                .run(new BasicChannelService(new FileChannelRepository()))
+                .run(new BasicMessageService(new FileMessageRepository()))
+                .run(new BasicUserService(new FileUserRepository()));
     }
 
 }

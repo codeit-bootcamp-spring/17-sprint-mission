@@ -8,9 +8,16 @@ import java.util.stream.Collectors;
 
 public class JCFChannelService implements ChannelService {
     private final Map<UUID, Channel> data = new HashMap<>();
+    private static JCFChannelService instance;
 
+    private JCFChannelService() {
+    }
 
-    /// / ChannelService Interface Override (CRUD)
+    public static JCFChannelService getInstance() {
+        return (instance == null) ? instance = new JCFChannelService() : instance;
+    }
+
+    /// ChannelService Interface Override (CRUD)
 
     @Override
     public Channel create(String name, UUID serverId) {

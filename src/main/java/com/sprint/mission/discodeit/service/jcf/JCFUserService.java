@@ -1,6 +1,5 @@
 package com.sprint.mission.discodeit.service.jcf;
 
-import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -9,9 +8,16 @@ import java.util.stream.Collectors;
 
 public class JCFUserService implements UserService {
     private final Map<UUID, User> data = new HashMap<>();
+    private static JCFUserService instance;
 
+    private JCFUserService() {
+    }
 
-    /// / UserService Interface Override (CRUD)
+    public static JCFUserService getInstance() {
+        return (instance == null) ? instance = new JCFUserService() : instance;
+    }
+
+    /// UserService Interface Override (CRUD)
 
     @Override
     public User create(String name, String imageUrl, String email, String password) {

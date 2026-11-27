@@ -6,22 +6,26 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 
 import javax.swing.*;
 import java.util.*;
 import java.util.stream.IntStream;
 
 class TestRunner {
-    void run(ChannelService channelService) {
+    TestRunner run(ChannelService channelService) {
         new ChannelTest(channelService);
+        return this;
     }
 
-    void run(MessageService messageService) {
+    TestRunner run(MessageService messageService) {
         new MessageTest(messageService);
+        return this;
     }
 
-    void run(UserService userService) {
+    TestRunner run(UserService userService) {
         new UserTest(userService);
+        return this;
     }
 }
 
