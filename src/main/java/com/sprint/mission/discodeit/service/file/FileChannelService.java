@@ -1,8 +1,15 @@
 package com.sprint.mission.discodeit.service.file;
 
+import com.sprint.mission.discodeit.config.DataPaths;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +18,19 @@ import java.util.stream.Collectors;
 
 public class FileChannelService implements ChannelService {
     private final Map<UUID, Channel> data = new HashMap<>();
-
+    public final Path dataDir = Path.of(System.getProperty("user.dir"), "data", "channel");
 
     /// / ChannelService Interface Override (CRUD)
 
     @Override
     public Channel create(String name, UUID serverId) {
         Channel newChannel = new Channel(name, serverId);
-        data.put(newChannel.getId(), newChannel);
+        try (FileOutputStream fos = new FileOutputStream(DataPaths.serializedFileName(newChannel));
+             ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+            oos.writeObject(newChannel);
+        } catch (IOException e) {
+            throw new UncheckedIOException("채널 저장 실패. id:" + newChannel.getId(), e);
+        }
         return newChannel;
     }
 
