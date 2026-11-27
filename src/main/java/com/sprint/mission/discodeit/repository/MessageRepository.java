@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageRepository {
+    static final String DIRECTORY_NAME = "messages";
+    static final String PRE_FIX = "message_";
+    static final String POST_FIX = ".ser";
 
     Message save(Message entity);
 
