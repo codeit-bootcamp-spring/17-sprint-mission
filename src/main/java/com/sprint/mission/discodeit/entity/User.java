@@ -1,8 +1,13 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /// 도메인 공통 필드
     private final UUID id = UUID.randomUUID();
     private final Long createdAt = System.currentTimeMillis();
@@ -20,7 +25,7 @@ public class User {
         update(name, imageUrl, email, password);
     }
 
-    ///// Setter
+    /// // Setter
 
     public User update(String name, String imageUrl, String email, String password) {
         this.name = name;
@@ -32,7 +37,7 @@ public class User {
         return this;
     }
 
-    //// Getter
+    /// / Getter
 
 
     public UUID getId() {

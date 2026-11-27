@@ -1,8 +1,13 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Message {
+public class Message  implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /// 도메인 공통 필드
     private final UUID id = UUID.randomUUID();
     private final Long createdAt = System.currentTimeMillis();
