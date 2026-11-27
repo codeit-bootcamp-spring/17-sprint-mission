@@ -4,59 +4,46 @@ import com.sprint.mission.discodeit.config.SerializedFileStore;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class FileMessageService implements MessageService {
-    private final Map<UUID, Message> data = new HashMap<>();
     private static final String DIRECTORY_NAME = "messages";
-    private static final String EXTENSION = ".ser";
-
+    private static final String PRE_FIX = "message_";
+    private static final String POST_FIX = ".ser";
 
     /// / MessageService Interface Override (CRUD)
 
     @Override
     public Message create(String content, UUID authorId, UUID channelId) {
         Message entity = new Message(content, authorId, channelId);
-        return SerializedFileStore.serializeToFile(entity, "messages", entity.getId(), ".ser");
+        return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, entity.getId(), POST_FIX);
     }
 
     @Override
     public Message findById(UUID id) {
-        return getCheckedData(id);
+        return SerializedFileStore.deserializeFromFile(Message.class, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 
     @Override
     public List<Message> findAllById(List<UUID> ids) {
-        return ids.stream()
-                .map(this::getCheckedData)
-                .distinct()
-                .collect(Collectors.toList());
+        return SerializedFileStore.deserializeFromFile(Message.class, DIRECTORY_NAME, PRE_FIX, ids, POST_FIX);
     }
 
     @Override
     public List<Message> findAll() {
-        return data.values().stream().toList();
+        return SerializedFileStore.deserializeAllFromDirectory(Message.class, DIRECTORY_NAME, PRE_FIX, POST_FIX);
     }
 
     @Override
     public Message update(UUID id, String content, UUID authorId, UUID channelId) {
-        return getCheckedData(id).update(content, authorId, channelId);
+        Message entity = findById(id).update(content, authorId, channelId);
+        delete(id);
+        return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 
     @Override
     public void delete(UUID id) {
-        getCheckedData(id);
-        data.remove(id);
-    }
-
-    private Message getCheckedData(UUID id) {
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("유효하지 않은 Message Id. (" + id + ")");
-        }
-        return data.get(id);
+        SerializedFileStore.deleteFile(DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 }

@@ -13,35 +13,35 @@ public final class SerializedFileStore {
     private SerializedFileStore() {
     }
 
-    public static <T extends Serializable> T serializeToFile(T object, String directoryName, Object key, String extension) {
+    public static <T extends Serializable> T serializeToFile(T object, String directoryName, String preFix, Object key, String postFix) {
         final Path dir = getDirectoryPath(directoryName);
-        final Path file = dir.resolve(normalizeFileName(key, extension));
+        final Path file = dir.resolve(normalizeFileName(preFix, key, postFix));
 
         createPath(dir);
         return serialize(object, file.toFile());
     }
 
-    public static <T extends Serializable> T deserializeFromFile(Class<T> objectType, String directoryName, Object key, String extension) {
+    public static <T extends Serializable> T deserializeFromFile(Class<T> objectType, String directoryName, String preFix, Object key, String postFix) {
         final Path dir = getDirectoryPath(directoryName);
-        final Path file = dir.resolve(normalizeFileName(key, extension));
+        final Path file = dir.resolve(normalizeFileName(preFix, key, postFix));
 
         return deserialize(objectType, file.toFile());
     }
 
-    public static <T extends Serializable> List<T> deserializeFromFile(Class<T> objectType, String directoryName, List<?> keys, String extension) {
+    public static <T extends Serializable> List<T> deserializeFromFile(Class<T> objectType, String directoryName, String preFix, List<?> keys, String postFix) {
         return keys.stream()
-                .map(key -> getDirectoryPath(directoryName).resolve(normalizeFileName(key, extension)))
+                .map(key -> getDirectoryPath(directoryName).resolve(normalizeFileName(preFix, key, postFix)))
                 .map(path -> deserialize(objectType, path.toFile()))
                 .collect(Collectors.toList());
     }
 
-    public static <T extends Serializable> List<T> deserializeAllFromDirectory(Class<T> objectType, String directoryName, String extension) {
+    public static <T extends Serializable> List<T> deserializeAllFromDirectory(Class<T> objectType, String directoryName, String preFix, String postFix) {
         final Path dir = getDirectoryPath(directoryName);
-        final String normalizedExtension = normalizeExtension(extension);
 
         try (Stream<Path> paths = Files.list(dir)) {
             return paths
-                    .filter(path -> path.getFileName().toString().endsWith(normalizedExtension))
+                    .filter(path -> path.getFileName().toString().startsWith(preFix))
+                    .filter(path -> path.getFileName().toString().endsWith(postFix))
                     .filter(Files::isRegularFile)
                     .map(path -> deserialize(objectType, path.toFile()))
                     .collect(Collectors.toList());
@@ -50,9 +50,9 @@ public final class SerializedFileStore {
         }
     }
 
-    public static void deleteFile(String directoryName, Object key, String extension) {
+    public static void deleteFile(String directoryName, String preFix, Object key, String postFix) {
         final Path dir = getDirectoryPath(directoryName);
-        final Path file = dir.resolve(normalizeFileName(key, extension));
+        final Path file = dir.resolve(normalizeFileName(preFix, key, postFix));
 
         try {
             Files.delete(file);
@@ -99,14 +99,7 @@ public final class SerializedFileStore {
         return DATA_HOME.resolve(directoryName);
     }
 
-    private static String normalizeExtension(String extension) {
-        if (extension.isEmpty() || extension.startsWith("."))
-            return extension;
-
-        return "." + extension;
-    }
-
-    private static String normalizeFileName(Object key, String extension) {
-        return key.toString() + normalizeExtension(extension);
+    private static String normalizeFileName(String preFix, Object key, String postFix) {
+        return preFix + key.toString() + postFix;
     }
 }
