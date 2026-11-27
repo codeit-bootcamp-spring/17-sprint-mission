@@ -37,7 +37,6 @@ public class BasicUserService implements UserService {
     @Override
     public User update(UUID id, String name, String imageUrl, String email, String password) {
         User entity = repository.findById(id).update(name, imageUrl, email, password);
-        repository.delete(id);
         return repository.save(entity);
     }
 

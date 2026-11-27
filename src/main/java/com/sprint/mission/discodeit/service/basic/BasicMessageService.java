@@ -37,7 +37,6 @@ public class BasicMessageService implements MessageService {
     @Override
     public Message update(UUID id, String content, UUID authorId, UUID channelId) {
         Message entity = repository.findById(id).update(content, authorId, channelId);
-        repository.delete(id);
         return repository.save(entity);
     }
 

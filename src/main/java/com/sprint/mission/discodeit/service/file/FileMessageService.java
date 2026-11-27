@@ -38,7 +38,6 @@ public class FileMessageService implements MessageService {
     @Override
     public Message update(UUID id, String content, UUID authorId, UUID channelId) {
         Message entity = findById(id).update(content, authorId, channelId);
-        delete(id);
         return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 

@@ -37,7 +37,6 @@ public class BasicChannelService implements ChannelService {
     @Override
     public Channel update(UUID id, String name, UUID serverId) {
         Channel entity = repository.findById(id).update(name,serverId);
-        repository.delete(id);
         return repository.save(entity);
     }
 

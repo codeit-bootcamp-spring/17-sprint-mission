@@ -38,7 +38,6 @@ public class FileChannelService implements ChannelService {
     @Override
     public Channel update(UUID id, String name, UUID serverId) {
         Channel entity = findById(id).update(name,serverId);
-        delete(id);
         return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 

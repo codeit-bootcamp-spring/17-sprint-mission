@@ -38,7 +38,6 @@ public class FileUserService implements UserService {
     @Override
     public User update(UUID id, String name, String imageUrl, String email, String password) {
         User entity = findById(id).update(name, imageUrl, email, password);
-        delete(id);
         return SerializedFileStore.serializeToFile(entity, DIRECTORY_NAME, PRE_FIX, id, POST_FIX);
     }
 

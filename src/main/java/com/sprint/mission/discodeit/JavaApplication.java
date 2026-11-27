@@ -22,9 +22,9 @@ import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 public class JavaApplication {
 
     public static void main(String[] args) {
-        testJCF();
-        testFile();
-        testBasicJCF();
+        //testJCF();
+        //testFile();
+        //testBasicJCF();
         testBasicFile();
     }
 
