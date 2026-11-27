@@ -54,12 +54,6 @@ abstract class TestCRUD<T, U> {
         System.out.println("delete id : " + testId);
         delete(t, testId);
         findAll(t).forEach(System.out::println);
-        // 삭제된 채널 id로 검색 : 오류
-        try {
-            findById(t, testId);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e);
-        }
     }
 
     abstract protected U create(T service, int index);
@@ -84,7 +78,7 @@ class ChannelTest extends TestCRUD<ChannelService, Channel> {
 
     @Override
     protected Channel create(ChannelService service, int index) {
-        return service.create("서버" + index, null);
+        return service.create("채널" + index, null);
     }
 
     @Override

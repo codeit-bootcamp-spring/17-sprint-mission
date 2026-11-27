@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.file;
 
+import com.sprint.mission.discodeit.config.SerializedFileStore;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -11,15 +12,16 @@ import java.util.stream.Collectors;
 
 public class FileUserService implements UserService {
     private final Map<UUID, User> data = new HashMap<>();
+    private static final String DIRECTORY_NAME = "users";
+    private static final String EXTENSION = ".ser";
 
 
     /// / UserService Interface Override (CRUD)
 
     @Override
     public User create(String name, String imageUrl, String email, String password) {
-        User newUser = new User(name, imageUrl, email, password);
-        data.put(newUser.getId(), newUser);
-        return newUser;
+        User entity = new User(name, imageUrl, email, password);
+        return SerializedFileStore.serializeToFile(entity, "users", entity.getId(), ".ser");
     }
 
     @Override

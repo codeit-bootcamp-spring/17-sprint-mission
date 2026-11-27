@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.file;
 
+import com.sprint.mission.discodeit.config.SerializedFileStore;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
 
@@ -11,15 +12,16 @@ import java.util.stream.Collectors;
 
 public class FileMessageService implements MessageService {
     private final Map<UUID, Message> data = new HashMap<>();
+    private static final String DIRECTORY_NAME = "messages";
+    private static final String EXTENSION = ".ser";
 
 
-    //// MessageService Interface Override (CRUD)
+    /// / MessageService Interface Override (CRUD)
 
     @Override
     public Message create(String content, UUID authorId, UUID channelId) {
-        Message newMessage = new Message(content, authorId, channelId);
-        data.put(newMessage.getId(), newMessage);
-        return newMessage;
+        Message entity = new Message(content, authorId, channelId);
+        return SerializedFileStore.serializeToFile(entity, "messages", entity.getId(), ".ser");
     }
 
     @Override
